@@ -2,16 +2,16 @@ import { expect, test } from '@playwright/test';
 
 const routes = [
   ['/', 'A safer way to report cybercrime'],
-  ['/login', 'Demo login'],
+  ['/login', 'Sign in to continue'],
   ['/chat', 'Complaint assistant'],
-  ['/preview', 'Preview complaint'],
+  ['/preview', 'Complaint Preview'],
   ['/success', 'Demo acknowledgement'],
-  ['/track', 'Track a complaint'],
+  ['/track', 'Track Complaint'],
 ] as const;
 
 test('all foundation routes are available', async ({ page }) => {
   for (const [route, heading] of routes) {
     await page.goto(route);
-    await expect(page.getByRole('heading', { name: heading })).toBeVisible();
+    await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
   }
 });

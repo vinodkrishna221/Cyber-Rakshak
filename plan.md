@@ -60,18 +60,18 @@ package:
 
 | Task | Feature | Depends on | Status |
 | --- | --- | --- | --- |
-| 01 | Project foundation and quality tooling | — | Not started |
-| 02 | Design tokens, shared shell, and language foundation | 01 | Not started |
-| 03 | Home page, static hero, and responsive trust content | 02 | Not started |
-| 04 | Home-page transformation animation and motion fallback | 03 | Not started |
-| 05 | Demo login and OTP flow | 02 | Not started |
-| 06 | Complaint draft store and mock classifier | 01, 02 | Not started |
-| 07 | Chat shell, initial conversation, and category result | 05, 06 | Not started |
-| 08 | Guided category-specific chat questions | 07 | Not started |
-| 09 | Evidence collection and live complaint summary | 08 | Not started |
-| 10 | Complaint preview and edit flow | 09 | Not started |
-| 11 | Demo submission, acknowledgement, and tracking | 10 | Not started |
-| 12 | Accessibility, responsive QA, and end-to-end polish | 04, 11 | Not started |
+| 01 | Project foundation and quality tooling | — | Completed |
+| 02 | Design tokens, shared shell, and language foundation | 01 | Completed |
+| 03 | Home page, static hero, and responsive trust content | 02 | Completed |
+| 04 | Home-page transformation animation and motion fallback | 03 | Completed |
+| 05 | Demo login and OTP flow | 02 | Completed |
+| 06 | Complaint draft store and mock classifier | 01, 02 | Completed |
+| 07 | Chat shell, initial conversation, and category result | 05, 06 | Completed |
+| 08 | Guided category-specific chat questions | 07 | Completed |
+| 09 | Evidence collection and live complaint summary | 08 | Completed |
+| 10 | Complaint preview and edit flow | 09 | Completed |
+| 11 | Demo submission, acknowledgement, and tracking | 10 | Completed |
+| 12 | Accessibility, responsive QA, and end-to-end polish | 04, 11 | Completed |
 
 ---
 
