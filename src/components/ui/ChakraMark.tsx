@@ -43,32 +43,24 @@ export const ChakraMark: React.FC<ChakraMarkProps> = ({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Outer saffron upper arc */}
+        {/* Outer saffron ring */}
         <circle
           cx={radius}
           cy={radius}
           r={innerRadius + 1.5}
           stroke="#FF8F1F"
           strokeWidth="2"
-          strokeDasharray={`${Math.PI * (innerRadius + 1.5) * 0.5} ${Math.PI * (innerRadius + 1.5) * 0.5}`}
-          strokeDashoffset={Math.PI * (innerRadius + 1.5) * 0.25}
-          strokeLinecap="round"
+          strokeOpacity="0.4"
         />
 
-        {/* Outer india-green lower arc */}
-        <circle
-          cx={radius}
-          cy={radius}
-          r={innerRadius + 1.5}
-          stroke="#138A43"
-          strokeWidth="2"
-          strokeDasharray={`${Math.PI * (innerRadius + 1.5) * 0.5} ${Math.PI * (innerRadius + 1.5) * 0.5}`}
-          strokeDashoffset={-Math.PI * (innerRadius + 1.5) * 0.25}
-          strokeLinecap="round"
-        />
-
-        {/* Center blue chakra disk */}
-        <circle cx={radius} cy={radius} r={innerRadius} fill="#1A4E9A" />
+        {/* Center Saffron Gradient Emblem Disk */}
+        <defs>
+          <linearGradient id={`markGrad-${dimension}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFA24C" />
+            <stop offset="100%" stopColor="#FF8F1F" />
+          </linearGradient>
+        </defs>
+        <circle cx={radius} cy={radius} r={innerRadius} fill={`url(#markGrad-${dimension})`} />
 
         {/* 12 Stylized Spokes */}
         {Array.from({ length: 12 }).map((_, index) => {

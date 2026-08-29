@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="saffronGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFA24C" />
+      <stop offset="100%" stop-color="#FF8F1F" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#FF8F1F" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Ring with Subtle Saffron Glow -->
+  <circle cx="32" cy="32" r="30" fill="#FFFDF7" stroke="#FF8F1F" stroke-width="2" stroke-opacity="0.3"/>
+  <circle cx="32" cy="32" r="27" fill="url(#saffronGrad)" filter="url(#glow)"/>
+
+  <!-- Protective Cyber Shield -->
+  <path d="M32 14L45 19.5V31C45 40 39.5 47.5 32 50C24.5 47.5 19 40 19 31V19.5L32 14Z" fill="white" fill-opacity="0.95"/>
+  <path d="M32 17L42.5 21.5V31C42.5 38.5 38 44.8 32 47C26 44.8 21.5 38.5 21.5 31V21.5L32 17Z" stroke="#FF8F1F" stroke-width="1.5" stroke-opacity="0.4"/>
+
+  <!-- Secure Verified Checkmark -->
+  <path d="M27 31.5L30.5 35L37 28.5" stroke="#FF8F1F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
