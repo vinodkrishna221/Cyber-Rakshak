@@ -155,15 +155,15 @@ export const ComplaintSummaryPanel: React.FC<ComplaintSummaryPanelProps> = ({
       </div>
 
       {/* Category Section */}
-      <div className="rounded-xl bg-mist p-3.5 border border-border-soft space-y-2 shadow-2xs">
+      <div className="rounded-xl bg-saffron/5 p-3.5 border border-saffron/20 space-y-2 shadow-sm">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-text flex items-center gap-1.5">
-            <Layers className="size-3.5 text-chakra-blue" aria-hidden="true" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-saffron bg-saffron/10 px-2 py-0.5 rounded-full flex items-center gap-1.5">
+            <Layers className="size-3.5" aria-hidden="true" />
             <span>{t.chat.categoryLabel}</span>
           </span>
           {classification && (
-            <span className="text-[11px] font-bold text-chakra-blue bg-blue-50 px-2 py-0.5 rounded-pill border border-blue-100 flex items-center gap-1">
-              <Sparkles className="size-3 text-saffron" aria-hidden="true" />
+            <span className="text-[11px] font-bold text-white bg-saffron px-2 py-0.5 rounded-pill shadow-sm flex items-center gap-1">
+              <Sparkles className="size-3" aria-hidden="true" />
               <span>
                 {Math.round((classification.confidence || 0.9) * 100)}%
               </span>
@@ -173,7 +173,7 @@ export const ComplaintSummaryPanel: React.FC<ComplaintSummaryPanelProps> = ({
 
         <div>
           <p className="text-sm font-bold text-deep-navy">{categoryLabel}</p>
-          <p className="text-xs text-chakra-blue font-medium mt-0.5">
+          <p className="text-xs text-saffron font-medium mt-0.5">
             {subCategoryLabel}
           </p>
         </div>
@@ -333,10 +333,10 @@ export const ComplaintSummaryPanel: React.FC<ComplaintSummaryPanelProps> = ({
           disabled={!isDraftComplete}
           onClick={() => navigate('/preview')}
           rightIcon={<ArrowRight className="size-4" aria-hidden="true" />}
-          className={`w-full font-bold text-xs shadow-2xs ${
+          className={`w-full font-bold text-xs ${
             isDraftComplete
-              ? 'bg-saffron text-deep-navy hover:bg-[#E67E17]'
-              : 'bg-mist text-muted-text opacity-70 cursor-not-allowed border-border-soft'
+              ? 'bg-saffron text-white hover:bg-[#E67E17] shadow-lg shadow-saffron/20'
+              : 'bg-mist text-muted-text opacity-70 cursor-not-allowed border-border-soft shadow-sm'
           }`}
         >
           {t.chat.previewBtn}
@@ -401,11 +401,11 @@ export const ComplaintSummaryPanel: React.FC<ComplaintSummaryPanelProps> = ({
   // Desktop Static Sidebar Panel
   return (
     <aside
-      className={`rounded-2xl border border-border-soft bg-white/90 p-5 shadow-xs flex flex-col gap-4 ${className}`}
+      className={`rounded-2xl border border-black/5 bg-white/70 backdrop-blur-md p-5 shadow-lg flex flex-col gap-4 ${className}`}
       aria-label={t.chat.summaryPanelTitle}
       data-testid="complaint-summary-panel"
     >
-      <div className="flex items-center justify-between pb-3 border-b border-border-soft">
+      <div className="flex items-center justify-between pb-3 border-b border-black/5">
         <div>
           <h2 className="text-sm font-bold text-deep-navy flex items-center gap-2">
             <FileText className="size-4 text-chakra-blue" aria-hidden="true" />

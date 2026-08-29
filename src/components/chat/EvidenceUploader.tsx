@@ -254,16 +254,16 @@ export const EvidenceUploader: React.FC<EvidenceUploaderProps> = ({
 
   return (
     <div
-      className={`rounded-2xl border border-border-soft bg-white p-4 sm:p-5 shadow-xs space-y-4 ${className}`}
+      className={`rounded-2xl border border-black/5 bg-white p-5 sm:p-6 shadow-xl space-y-4 ${className}`}
       data-testid="evidence-uploader"
       role="region"
       aria-label={t.evidence.sectionTitle}
     >
       {/* Header */}
-      <div className="flex items-center justify-between gap-2 pb-2 border-b border-border-soft">
-        <div className="flex items-center gap-2">
-          <div className="size-7 rounded-lg bg-blue-50 text-chakra-blue flex items-center justify-center">
-            <UploadCloud className="size-4" aria-hidden="true" />
+      <div className="flex items-center justify-between gap-3 pb-3 border-b border-black/5">
+        <div className="flex items-center gap-2.5">
+          <div className="size-8 rounded-full bg-saffron/10 text-saffron flex items-center justify-center">
+            <UploadCloud className="size-4.5" aria-hidden="true" />
           </div>
           <div>
             <h3 className="text-sm sm:text-base font-bold text-deep-navy">
@@ -282,16 +282,16 @@ export const EvidenceUploader: React.FC<EvidenceUploaderProps> = ({
             type="button"
             onClick={onClose}
             aria-label="Close evidence uploader"
-            className="p-1 rounded-lg text-muted-text hover:text-deep-navy hover:bg-mist transition-colors cursor-pointer"
+            className="p-2 rounded-full text-muted-text hover:text-deep-navy hover:bg-black/5 transition-colors cursor-pointer"
           >
-            <X className="size-4" />
+            <X className="size-5" />
           </button>
         )}
       </div>
 
       {/* Category-Tailored Guidance Banner */}
-      <div className="flex items-start gap-2 p-3 rounded-xl bg-mist border border-border-soft text-xs text-muted-text leading-relaxed">
-        <Info className="size-4 text-chakra-blue shrink-0 mt-0.5" aria-hidden="true" />
+      <div className="flex items-start gap-2 p-3.5 rounded-xl bg-saffron/5 border border-saffron/20 text-xs text-muted-text leading-relaxed">
+        <Info className="size-4 text-saffron shrink-0 mt-0.5" aria-hidden="true" />
         <div>
           <span className="font-bold text-deep-navy block mb-0.5">
             {t.chat.categoryLabel}: {currentCategory.replace(/_/g, ' ')}
@@ -352,8 +352,8 @@ export const EvidenceUploader: React.FC<EvidenceUploaderProps> = ({
         onClick={() => fileInputRef.current?.click()}
         className={`relative border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2 ${
           isDragging
-            ? 'border-chakra-blue bg-blue-50/80 ring-2 ring-chakra-blue/30 scale-[1.01]'
-            : 'border-border-soft bg-mist/50 hover:bg-mist hover:border-chakra-blue/40'
+            ? 'border-saffron bg-saffron/10 ring-2 ring-saffron/30 scale-[1.01]'
+            : 'border-black/10 bg-saffron/5 hover:bg-saffron/10 hover:border-saffron/40'
         }`}
         role="button"
         tabIndex={0}
@@ -376,7 +376,7 @@ export const EvidenceUploader: React.FC<EvidenceUploaderProps> = ({
           aria-hidden="true"
         />
 
-        <div className="size-10 rounded-full bg-white text-chakra-blue shadow-2xs flex items-center justify-center border border-border-soft">
+        <div className="size-10 rounded-full bg-white text-saffron shadow-sm flex items-center justify-center border border-black/5">
           <UploadCloud className="size-5" aria-hidden="true" />
         </div>
 
@@ -389,7 +389,7 @@ export const EvidenceUploader: React.FC<EvidenceUploaderProps> = ({
           </p>
         </div>
 
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-white text-chakra-blue text-xs font-bold border border-chakra-blue/30 shadow-2xs">
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-saffron text-white text-xs font-bold shadow-sm">
           <Plus className="size-3.5" aria-hidden="true" />
           <span>{t.evidence.browseFilesBtn}</span>
         </span>
@@ -407,11 +407,11 @@ export const EvidenceUploader: React.FC<EvidenceUploaderProps> = ({
               key={sample.id}
               type="button"
               onClick={() => handleAddSample(sample.name, sample.type, sample.mockSize)}
-              className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-pill bg-blue-50/80 hover:bg-blue-100 text-chakra-blue border border-chakra-blue/20 hover:border-chakra-blue/40 transition-all cursor-pointer shadow-2xs text-left"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold px-3 py-1.5 rounded-full bg-saffron/10 hover:bg-saffron text-saffron hover:text-white border border-saffron/20 transition-all cursor-pointer shadow-sm text-left"
             >
               <Plus className="size-3" aria-hidden="true" />
               <span>{sample.label}</span>
-              <span className="text-[10px] text-muted-text/80">({sample.mockSize})</span>
+              <span className="text-[10px] opacity-80">({sample.mockSize})</span>
             </button>
           ))}
         </div>

@@ -67,23 +67,23 @@ export const CategoryConfidenceCard: React.FC<CategoryConfidenceCardProps> = ({
 
   return (
     <div
-      className="my-3 sm:my-4 rounded-xl border border-chakra-blue/30 bg-white p-4 sm:p-5 shadow-xs transition-all"
+      className="my-3 sm:my-4 rounded-xl border border-saffron/30 bg-white/70 backdrop-blur-md p-4 sm:p-5 shadow-sm transition-all"
       role="region"
       aria-label={t.chat.suggestedCategoryTitle}
       data-testid="category-confidence-card"
     >
       {/* Header with AI Badge & Confidence Score */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-border-soft">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-black/5">
         <div className="flex items-center gap-2">
-          <div className="size-6 rounded-full bg-blue-50 text-chakra-blue flex items-center justify-center">
+          <div className="size-6 rounded-full bg-saffron/10 text-saffron flex items-center justify-center">
             <Sparkles className="size-3.5" aria-hidden="true" />
           </div>
-          <span className="text-xs font-bold uppercase tracking-wider text-chakra-blue">
+          <span className="text-xs font-bold uppercase tracking-wider text-saffron">
             {t.chat.suggestedCategoryTitle}
           </span>
         </div>
 
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill bg-blue-50 border border-chakra-blue/20 text-chakra-blue text-xs font-bold shadow-2xs">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-saffron text-white text-xs font-bold shadow-sm">
           <span>{t.chat.matchScore.replace('{score}', matchPercent.toString())}</span>
         </div>
       </div>
@@ -91,7 +91,7 @@ export const CategoryConfidenceCard: React.FC<CategoryConfidenceCardProps> = ({
       {/* Main Category Result */}
       <div className="mt-3.5 space-y-2">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-mist border border-border-soft">
+          <div className="p-2 rounded-lg bg-saffron/10 border border-saffron/20 text-saffron">
             {getCategoryIcon(classification.category)}
           </div>
           <div>

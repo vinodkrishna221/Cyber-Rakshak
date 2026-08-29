@@ -131,8 +131,8 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         aria-expanded={isOpen}
         aria-controls={isOpen ? 'language-listbox' : undefined}
         aria-label={t.language.changeLanguageAria}
-        className={`inline-flex items-center gap-1.5 rounded-md border border-border-soft bg-white px-2.5 py-1.5 text-xs font-semibold text-deep-navy shadow-2xs hover:bg-mist hover:border-chakra-blue/40 focus-visible:ring-2 focus-visible:ring-saffron focus-visible:ring-offset-1 transition-colors cursor-pointer ${
-          variant === 'compact' ? 'px-2 py-1 text-xs' : ''
+        className={`inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white/90 px-3 py-1.5 text-xs font-semibold text-deep-navy shadow-2xs hover:bg-mist hover:border-saffron/40 focus-visible:ring-2 focus-visible:ring-saffron focus-visible:ring-offset-1 transition-colors cursor-pointer ${
+          variant === 'compact' ? 'px-2.5 py-1 text-xs' : ''
         }`}
       >
         <Globe

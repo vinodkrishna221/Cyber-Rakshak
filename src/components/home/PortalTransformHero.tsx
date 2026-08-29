@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShieldCheck,
   ArrowRight,
   Search,
-  Bot,
-  PhoneCall,
-  CheckCircle2,
   ChevronDown,
+  Paperclip,
+  Send,
+  ShieldCheck,
+  Bot
 } from 'lucide-react';
 import { useTranslation } from '../../i18n';
 import { Button } from '../ui/Button';
-import { ChakraMark } from '../ui/ChakraMark';
-import { createParticles, renderParticles, Particle } from './particleEngine';
 import { LegacyPortalView } from './LegacyPortalView';
 
 interface PortalTransformHeroProps {
@@ -29,13 +27,7 @@ export const PortalTransformHero: React.FC<PortalTransformHeroProps> = ({
   const [progress, setProgress] = useState<number>(initialProgress);
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
 
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
-  const viewportRef = useRef<HTMLDivElement | null>(null);
-  const lastDimensionsRef = useRef<{ width: number; height: number }>({ width: 0, height: 0 });
-  const particlesRef = useRef<Particle[]>([]);
-  const progressRef = useRef<number>(initialProgress);
-  progressRef.current = progress;
 
   // Sync initialProgress prop if provided explicitly (e.g. for testing)
   useEffect(() => {
@@ -63,84 +55,6 @@ export const PortalTransformHero: React.FC<PortalTransformHeroProps> = ({
       }
     }
   }, []);
-
-  // Initialize and resize canvas & particles
-  const initCanvas = useCallback(() => {
-    const canvas = canvasRef.current;
-    const viewport = viewportRef.current;
-    if (!canvas || !viewport) return;
-
-    const rect = viewport.getBoundingClientRect();
-    const width =
-      Math.floor(rect.width) ||
-      (typeof window !== 'undefined' && window.innerWidth
-        ? window.innerWidth
-        : 1200);
-    const height = Math.floor(rect.height) || 600;
-
-    if (width <= 0 || height <= 0) return;
-
-    if (
-      lastDimensionsRef.current.width !== width ||
-      lastDimensionsRef.current.height !== height ||
-      particlesRef.current.length === 0
-    ) {
-      lastDimensionsRef.current = { width, height };
-
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-
-      const count = width < 768 ? 800 : 1600;
-      particlesRef.current = createParticles(width, height, count);
-    }
-
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      if (progressRef.current <= 0.05 || progressRef.current >= 0.95) {
-        ctx.clearRect(0, 0, width, height);
-      } else {
-        renderParticles(ctx, particlesRef.current, progressRef.current, width, height);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    initCanvas();
-
-    const handleResize = () => {
-      initCanvas();
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [initCanvas]);
-
-  // Render particles when progress updates
-  useEffect(() => {
-    if (reducedMotion) return;
-
-    const canvas = canvasRef.current;
-    const viewport = viewportRef.current;
-    if (!canvas || !viewport) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const width = lastDimensionsRef.current.width || viewport.getBoundingClientRect().width || 1200;
-    const height = lastDimensionsRef.current.height || viewport.getBoundingClientRect().height || 600;
-
-    if (progress <= 0.05 || progress >= 0.95) {
-      ctx.clearRect(0, 0, width, height);
-    } else {
-      renderParticles(ctx, particlesRef.current, progress, width, height);
-    }
-  }, [progress, reducedMotion]);
 
   // Natural scroll-driven transformation
   useEffect(() => {
@@ -201,13 +115,12 @@ export const PortalTransformHero: React.FC<PortalTransformHeroProps> = ({
       <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden">
         {/* Full-bleed Content Area */}
         <div
-          ref={viewportRef}
-          className="relative w-full h-full bg-[#002B49] overflow-hidden flex items-center justify-center"
+          className="relative w-full h-full overflow-hidden flex items-center justify-center"
           data-testid="browser-viewport-frame"
         >
           {/* Layer 1: Recreated Authentic Legacy Government Portal View (Full Screen) */}
           <div
-            className="absolute inset-0 w-full h-full flex flex-col items-center justify-start bg-[#002B49] transition-opacity duration-75 pointer-events-none select-none"
+            className="absolute inset-0 w-full h-full flex flex-col items-center justify-start bg-white transition-opacity duration-75 pointer-events-none select-none z-20"
             style={{ opacity: legacyOpacity }}
             aria-hidden={legacyOpacity <= 0.05}
             data-testid="legacy-screenshot-layer"
@@ -223,7 +136,7 @@ export const PortalTransformHero: React.FC<PortalTransformHeroProps> = ({
               <button
                 type="button"
                 onClick={handleScrollDown}
-                className="fixed bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 inline-flex items-center gap-2.5 px-5 py-2.5 rounded-pill bg-deep-navy/95 hover:bg-deep-navy text-white text-xs sm:text-sm font-semibold shadow-2xl backdrop-blur-md border border-white/20 transition-all hover:scale-105 pointer-events-auto cursor-pointer animate-bounce z-30"
+                className="fixed bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-deep-navy/95 hover:bg-deep-navy text-white text-xs sm:text-sm font-semibold shadow-2xl backdrop-blur-md border border-white/20 transition-all hover:scale-105 pointer-events-auto cursor-pointer animate-bounce z-30"
                 aria-label="Scroll down to experience Cyber Rakshak transformation"
               >
                 <span>{t.home.badge}</span>
@@ -232,23 +145,9 @@ export const PortalTransformHero: React.FC<PortalTransformHeroProps> = ({
             )}
           </div>
 
-          {/* Layer 2: Canvas Tricolor Particle Simulation (Only active while actively transforming) */}
-          {!reducedMotion && (
-            <canvas
-              ref={canvasRef}
-              className="absolute inset-0 w-full h-full pointer-events-none z-10"
-              style={{
-                opacity: progress > 0.05 && progress < 0.95 ? 1 : 0,
-                display: progress > 0.05 && progress < 0.95 ? 'block' : 'none',
-              }}
-              data-testid="particle-canvas"
-              aria-hidden="true"
-            />
-          )}
-
-          {/* Layer 3: Cyber Rakshak Modern Portal UI (Smoothly revealed) */}
+          {/* Layer 2: Cyber Rakshak Modern Portal UI (Smoothly revealed over the global background) */}
           <div
-            className={`absolute inset-0 w-full h-full bg-paper-white flex flex-col justify-center items-center p-4 sm:p-8 lg:p-12 overflow-auto transition-opacity duration-150 z-20 ${
+            className={`absolute inset-0 w-full h-full flex flex-col justify-center items-center p-4 sm:p-8 lg:p-12 overflow-auto transition-opacity duration-150 z-10 ${
               isResolved ? 'pointer-events-auto' : 'pointer-events-none'
             }`}
             style={{ opacity: rakshakOpacity }}
@@ -277,117 +176,69 @@ const CyberRakshakResolvedContent: React.FC<CyberRakshakResolvedContentProps> = 
   navigate,
 }) => {
   return (
-    <div className="flex flex-col justify-center max-w-5xl mx-auto w-full gap-6 sm:gap-8 my-auto">
-      {/* Brand Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-border-soft">
-        <div className="flex items-center gap-3">
-          <ChakraMark size="lg" aria-hidden="true" />
-          <div>
-            <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-chakra-blue block">
-              {t.common.brandName}
-            </span>
-            <span className="text-base sm:text-xl font-extrabold text-deep-navy">
-              {t.common.brandTagline}
-            </span>
-          </div>
-        </div>
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
-          <ShieldCheck className="size-4 text-india-green" aria-hidden="true" />
-          <span>{t.home.autoDraftedTag} • AI Ready</span>
-        </div>
+    <div className="flex flex-col items-center justify-center max-w-4xl mx-auto w-full gap-8 mt-12">
+      
+      {/* Title Area */}
+      <div className="text-center space-y-4 mb-4">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-deep-navy tracking-tight drop-shadow-sm">
+          How can Rakshak AI help you today?
+        </h1>
+        <p className="text-lg sm:text-xl text-muted-text font-medium drop-shadow-sm">
+          {t.common.brandTagline}
+        </p>
       </div>
 
-      {/* Main Feature Box */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-        {/* Left Column: Reassuring message & Smart Detection */}
-        <div className="md:col-span-7 space-y-4">
-          <div className="bg-mist p-4 sm:p-5 rounded-2xl border border-border-soft space-y-3 shadow-sm">
-            <div className="flex items-start gap-3">
-              <div className="size-8 rounded-full bg-chakra-blue text-white flex items-center justify-center shrink-0 shadow-xs">
-                <Bot className="size-4.5" aria-hidden="true" />
-              </div>
-              <div className="space-y-1">
-                <span className="text-xs font-bold text-chakra-blue uppercase tracking-wider">
-                  {t.common.assistantName}
-                </span>
-                <p className="text-sm sm:text-base text-deep-navy font-semibold leading-relaxed">
-                  {t.common.brandShortLine}
-                </p>
-              </div>
-            </div>
-
-            {/* Citizen Input Preview */}
-            <div className="bg-white p-3.5 rounded-xl border border-border-soft text-xs sm:text-sm text-muted-text font-medium flex items-center justify-between gap-3 shadow-2xs">
-              <span className="truncate italic">
-                &ldquo;{t.transformHero.resolvedUserMsg}&rdquo;
-              </span>
-              <span className="text-[11px] bg-blue-50 text-chakra-blue font-bold px-2.5 py-1 rounded-md shrink-0">
-                {t.transformHero.resolvedSmartTag}
-              </span>
-            </div>
-          </div>
-
-          {/* Key Advantages */}
-          <div className="grid grid-cols-2 gap-2.5 text-xs text-deep-navy font-medium">
-            <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-border-soft shadow-2xs">
-              <CheckCircle2 className="size-4 text-india-green shrink-0" />
-              <span className="truncate">{t.transformHero.resolvedPoint1}</span>
-            </div>
-            <div className="flex items-center gap-2 bg-white p-3 rounded-lg border border-border-soft shadow-2xs">
-              <CheckCircle2 className="size-4 text-india-green shrink-0" />
-              <span className="truncate">{t.transformHero.resolvedPoint2}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Instant CTAs */}
-        <div className="md:col-span-5 flex flex-col gap-3 bg-gradient-to-br from-blue-50/80 via-white to-amber-50/50 p-5 rounded-2xl border border-chakra-blue/25 shadow-sm">
-          <span className="text-xs font-bold uppercase tracking-wider text-chakra-blue">
-            {t.transformHero.rakshakBadge}
-          </span>
-          <p className="text-xs sm:text-sm text-muted-text leading-relaxed font-normal">
-            {t.transformHero.resolvedCtaDesc}
-          </p>
-
-          <div className="flex flex-col gap-2.5 mt-2">
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={() => navigate('/login')}
-              rightIcon={<ArrowRight className="size-4.5" aria-hidden="true" />}
-              className="w-full shadow-sm text-sm font-bold"
-            >
-              {t.home.startReportCta}
-            </Button>
-
-            <Button
-              variant="secondary"
-              size="md"
-              onClick={() => navigate('/track')}
-              leftIcon={<Search className="size-4 text-chakra-blue" aria-hidden="true" />}
-              className="w-full bg-white text-xs font-semibold"
-            >
-              {t.home.trackComplaintCta}
-            </Button>
+      {/* Main Chat Input (bolt.new style - light version) */}
+      <div className="w-full max-w-3xl bg-white border border-black/5 rounded-2xl p-4 shadow-xl shadow-saffron/5 focus-within:ring-2 focus-within:ring-saffron/50 transition-all">
+        <textarea
+          className="w-full bg-transparent text-deep-navy placeholder-gray-400 text-lg resize-none outline-none min-h-[120px] p-2"
+          placeholder="Tell us what happened in plain words (e.g. UPI fraud, suspicious link, blackmail)..."
+        />
+        
+        <div className="flex items-center justify-between mt-2 pt-2 border-t border-black/5">
+          <button className="p-2 rounded-full hover:bg-black/5 text-gray-400 hover:text-deep-navy transition-colors">
+            <Paperclip className="size-5" />
+          </button>
+          
+          <div className="flex items-center gap-3">
+            <button className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-deep-navy transition-colors px-2">
+              <Bot className="size-4" />
+              <span>Rakshak AI</span>
+            </button>
+            <button className="flex items-center gap-2 bg-saffron hover:bg-[#E67E17] text-white px-5 py-2.5 rounded-full font-bold transition-colors shadow-md">
+              Start
+              <Send className="size-4" />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Emergency Golden Hour Strip */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 sm:p-3.5 rounded-xl bg-amber-50/90 border border-amber-200 text-xs sm:text-sm text-amber-900 shadow-2xs">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <PhoneCall className="size-4 text-alert-red shrink-0" aria-hidden="true" />
-          <span className="font-semibold truncate">
-            {t.home.goldenHourHint}
-          </span>
-        </div>
-        <a
-          href="tel:1930"
-          className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-alert-red text-white text-xs sm:text-sm font-bold hover:bg-red-700 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 shrink-0"
-          aria-label={t.emergency.ariaLabel}
+      {/* Quick Action Pills */}
+      <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+        <button 
+          onClick={() => navigate('/login')}
+          className="flex items-center gap-3 px-6 py-3.5 rounded-xl bg-white hover:bg-mist border border-black/5 shadow-md text-deep-navy transition-all hover:scale-105"
         >
-          {t.emergency.pillLabel}
-        </a>
+          <div className="bg-saffron/10 p-2 rounded-lg">
+            <ArrowRight className="size-5 text-saffron" />
+          </div>
+          <span className="font-bold text-sm">{t.home.startReportCta}</span>
+        </button>
+
+        <button 
+          onClick={() => navigate('/track')}
+          className="flex items-center gap-3 px-6 py-3.5 rounded-xl bg-white hover:bg-mist border border-black/5 shadow-md text-deep-navy transition-all hover:scale-105"
+        >
+          <div className="bg-saffron/10 p-2 rounded-lg">
+            <Search className="size-5 text-saffron" />
+          </div>
+          <span className="font-bold text-sm">{t.home.trackComplaintCta}</span>
+        </button>
+      </div>
+
+      <div className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-black/5 text-muted-text text-xs font-bold shadow-sm">
+        <ShieldCheck className="size-4 text-saffron" aria-hidden="true" />
+        <span>Secure & Encrypted • Official Portal</span>
       </div>
     </div>
   );

@@ -53,21 +53,21 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => 
     >
       {/* Avatar */}
       {isAssistant ? (
-        <div className="shrink-0 pt-0.5">
-          <ChakraMark size="sm" aria-hidden="true" />
+        <div className="size-7 sm:size-8 rounded-full border-2 border-saffron bg-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+          <ShieldCheck className="size-4 sm:size-5 text-saffron" />
         </div>
       ) : (
-        <div className="size-7 rounded-full bg-deep-navy text-white flex items-center justify-center shrink-0 shadow-2xs">
-          <User className="size-4 text-white" aria-hidden="true" />
+        <div className="size-7 sm:size-8 rounded-full bg-saffron text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+          <User className="size-4 sm:size-5" />
         </div>
       )}
 
       {/* Message Bubble */}
       <div
-        className={`flex flex-col max-w-[88%] sm:max-w-[80%] rounded-2xl p-3.5 sm:p-4 shadow-2xs ${
+        className={`relative flex-1 max-w-[90%] sm:max-w-[85%] ${
           isAssistant
-            ? 'bg-white border border-border-soft text-deep-navy rounded-tl-xs'
-            : 'bg-deep-navy text-white rounded-tr-xs'
+            ? 'bg-white/90 backdrop-blur-sm border-l-4 border-saffron shadow-sm rounded-2xl rounded-tl-sm pl-4 pr-3 py-3'
+            : 'bg-saffron text-white shadow-sm rounded-2xl rounded-tr-sm px-4 py-3'
         }`}
       >
         {/* Header with Sender name, Question Step Counter & Timestamp */}
@@ -75,7 +75,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => 
           <div className="flex items-center gap-2">
             <span
               className={`text-[11px] font-bold uppercase tracking-wider ${
-                isAssistant ? 'text-chakra-blue' : 'text-blue-200'
+                isAssistant ? 'text-saffron' : 'text-white/90'
               }`}
             >
               {isAssistant ? 'Rakshak AI' : 'You'}
@@ -83,7 +83,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => 
 
             {/* Question Progress Badge */}
             {isAssistant && questionIndex && totalQuestions && (
-              <span className="text-[10px] font-bold text-chakra-blue bg-blue-50 px-2 py-0.5 rounded-pill border border-blue-100/80">
+              <span className="text-[10px] font-bold text-saffron bg-saffron/10 px-2 py-0.5 rounded-pill border border-saffron/20">
                 {t.chat.questionProgress
                   .replace('{current}', questionIndex.toString())
                   .replace('{total}', totalQuestions.toString())}
@@ -94,7 +94,7 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => 
           {message.timestamp && (
             <span
               className={`text-[10px] ${
-                isAssistant ? 'text-muted-text' : 'text-blue-300/80'
+                isAssistant ? 'text-muted-text' : 'text-white/70'
               }`}
             >
               {new Date(message.timestamp).toLocaleTimeString([], {
@@ -113,14 +113,16 @@ export const ChatMessageItem: React.FC<ChatMessageItemProps> = ({ message }) => 
         )}
 
         {/* Message Content */}
-        <p className="text-sm leading-relaxed whitespace-pre-wrap font-medium">
+        <p className={`text-sm leading-relaxed whitespace-pre-wrap font-medium ${
+            isAssistant ? 'text-deep-navy' : 'text-white'
+        }`}>
           {displayContent}
         </p>
 
         {/* Supportive Sensitive Information Explanation Callout */}
         {isAssistant && explanation && (
-          <div className="mt-2.5 pt-2 border-t border-border-soft/80 flex items-start gap-2 text-xs bg-mist/70 p-2.5 rounded-xl text-muted-text">
-            <ShieldCheck className="size-4 text-chakra-blue shrink-0 mt-0.5" aria-hidden="true" />
+          <div className="mt-2.5 pt-2 border-t border-black/5 flex items-start gap-2 text-xs bg-saffron/5 p-2.5 rounded-xl text-muted-text">
+            <ShieldCheck className="size-4 text-saffron shrink-0 mt-0.5" aria-hidden="true" />
             <div className="space-y-0.5">
               <span className="font-bold text-deep-navy block text-[11px]">
                 {t.chat.whyWeAsk}

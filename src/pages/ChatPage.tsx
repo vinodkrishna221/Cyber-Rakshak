@@ -6,6 +6,7 @@ import {
   ChatThread,
   ChatComposer,
   ComplaintSummaryPanel,
+  EvidenceUploader,
 } from '../components/chat';
 import {
   ComplaintCategory,
@@ -18,7 +19,7 @@ import { getCategoryDefinition } from '../data/categories';
 export const ChatPage: React.FC = () => {
   const { t, language } = useTranslation();
   const [isTyping, setIsTyping] = useState(false);
-  const [showEvidenceSection, setShowEvidenceSection] = useState(false);
+  const [showEvidenceModal, setShowEvidenceModal] = useState(false);
 
   const {
     draft,
@@ -35,6 +36,26 @@ export const ChatPage: React.FC = () => {
   } = useDraftStore();
 
   const hasInitialized = useRef(false);
+  const prevStepRef = useRef(workflow.currentStep);
+
+  // Auto-open modal once when workflow reaches evidence step
+  useEffect(() => {
+    if (workflow.currentStep === 'ask_evidence' && prevStepRef.current !== 'ask_evidence') {
+      setShowEvidenceModal(true);
+    }
+    prevStepRef.current = workflow.currentStep;
+  }, [workflow.currentStep]);
+
+  // Close modal on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showEvidenceModal) {
+        setShowEvidenceModal(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showEvidenceModal]);
 
   // Initialize initial greeting if thread is empty
   useEffect(() => {
@@ -195,40 +216,36 @@ export const ChatPage: React.FC = () => {
       };
       addEvidenceItem(newItem);
     });
-    setShowEvidenceSection(true);
+    setShowEvidenceModal(true);
   };
 
   // Handle resetting the chat report
   const handleReset = () => {
     if (window.confirm(t.chat.resetConfirmPrompt)) {
       resetChat();
-      setShowEvidenceSection(false);
+      setShowEvidenceModal(false);
     }
   };
 
   const hasCitizenReplied = chatMessages.some((m) => m.sender === 'user');
-  const shouldDisplayEvidence =
-    showEvidenceSection ||
-    workflow.isQuestionsCompleted ||
-    workflow.currentStep === 'ask_evidence';
 
   return (
     <div
-      className="max-w-7xl mx-auto w-full flex flex-col min-h-[calc(100vh-140px)]"
+      className="max-w-[1400px] mx-auto w-full flex flex-col h-[100dvh] pt-20 sm:pt-24 pb-4 px-4 sm:px-6"
       data-testid="chat-page"
     >
       {/* Top Banner Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 mb-2 border-b border-border-soft px-2">
-        <div className="flex items-center gap-2.5">
-          <div className="size-8 rounded-full bg-chakra-blue text-white flex items-center justify-center shadow-2xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 px-2">
+        <div className="flex items-center gap-3 bg-white/70 backdrop-blur-md border border-black/5 shadow-sm rounded-full px-4 py-2">
+          <div className="size-8 rounded-full bg-saffron text-white flex items-center justify-center shadow-sm">
             <Bot className="size-4.5" aria-hidden="true" />
           </div>
           <div>
-            <h1 className="text-base sm:text-lg font-extrabold text-deep-navy leading-tight">
+            <h1 className="text-sm sm:text-base font-extrabold text-deep-navy leading-tight">
               {t.chat.pageTitle}
             </h1>
-            <p className="text-xs text-muted-text hidden sm:block">
-              {t.chat.pageSubtitle}
+            <p className="text-[11px] text-muted-text font-medium hidden sm:block">
+              Rakshak AI • Chat Assistant
             </p>
           </div>
         </div>
@@ -238,10 +255,10 @@ export const ChatPage: React.FC = () => {
             <button
               type="button"
               onClick={handleReset}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border-soft hover:bg-mist text-xs font-semibold text-deep-navy transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-black/5 bg-white/70 backdrop-blur-md hover:bg-white shadow-sm text-xs font-bold text-deep-navy transition-colors cursor-pointer"
               title={t.chat.resetConversation}
             >
-              <RotateCcw className="size-3.5 text-muted-text" />
+              <RotateCcw className="size-3.5 text-saffron" />
               <span>{t.chat.resetConversation}</span>
             </button>
           )}
@@ -249,27 +266,25 @@ export const ChatPage: React.FC = () => {
       </div>
 
       {/* Main Two-Column Layout */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* Left Column: Chat Thread and Composer */}
-        <div className="lg:col-span-8 flex flex-col bg-white rounded-2xl border border-border-soft shadow-xs overflow-hidden h-[620px] sm:h-[680px]">
+        <div className="lg:col-span-8 flex flex-col bg-white/70 backdrop-blur-md rounded-2xl border border-black/5 shadow-lg overflow-hidden h-full">
           {/* Message Thread */}
           <ChatThread
             messages={chatMessages}
             classification={classification}
             categoryConfirmed={workflow.categoryConfirmed}
             isTyping={isTyping}
-            showEvidenceUploader={shouldDisplayEvidence}
             category={draft.category}
             onConfirmCategory={handleConfirmCategory}
             onChangeCategory={handleChangeCategory}
-            onCloseEvidence={() => setShowEvidenceSection(false)}
           />
 
           {/* Composer Box */}
           <ChatComposer
             onSendMessage={handleSendMessage}
             onSelectOption={handleSelectOption}
-            onToggleEvidence={() => setShowEvidenceSection((prev) => !prev)}
+            onToggleEvidence={() => setShowEvidenceModal((prev) => !prev)}
             onSelectFiles={handleSelectFilesFromComposer}
             disabled={isTyping}
             showStarterChips={!hasCitizenReplied}
@@ -278,11 +293,12 @@ export const ChatPage: React.FC = () => {
         </div>
 
         {/* Right Column: Live Complaint Summary (Desktop Sidebar) */}
-        <div className="hidden lg:block lg:col-span-4 sticky top-24">
+        <div className="hidden lg:block lg:col-span-4 h-full overflow-y-auto custom-scrollbar pr-1">
           <ComplaintSummaryPanel
             draft={draft}
             classification={classification}
-            onOpenEvidence={() => setShowEvidenceSection(true)}
+            onOpenEvidence={() => setShowEvidenceModal(true)}
+            className="h-full"
           />
         </div>
       </div>
@@ -293,9 +309,32 @@ export const ChatPage: React.FC = () => {
           draft={draft}
           classification={classification}
           isMobileDrawer={true}
-          onOpenEvidence={() => setShowEvidenceSection(true)}
+          onOpenEvidence={() => setShowEvidenceModal(true)}
         />
       </div>
+
+      {/* Evidence Uploader Modal Popup */}
+      {showEvidenceModal && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-deep-navy/40 backdrop-blur-sm animate-fade-in"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowEvidenceModal(false);
+            }
+          }}
+          data-testid="chat-evidence-section"
+        >
+          <div
+            className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl relative max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <EvidenceUploader
+              category={draft.category || classification?.category}
+              onClose={() => setShowEvidenceModal(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

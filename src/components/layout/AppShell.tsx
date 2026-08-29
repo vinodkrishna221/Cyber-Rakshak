@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { CursorTrail } from './CursorTrail';
 import { useTranslation } from '../../i18n';
+import { createParticles, updateParticles, renderParticles, Particle } from './particleEngine';
 
 export interface AppShellProps {
   children: React.ReactNode;
@@ -20,9 +22,13 @@ export const AppShell: React.FC<AppShellProps> = ({
   const { t, language } = useTranslation();
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const isChatPage = location.pathname === '/chat';
 
-  // Header visibility on home page: hidden on landing (scrollY <= 40), slides down on scroll
   const [headerVisible, setHeaderVisible] = useState<boolean>(!isHomePage);
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<Particle[]>([]);
+  const animationRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -47,8 +53,61 @@ export const AppShell: React.FC<AppShellProps> = ({
     return () => window.removeEventListener('scroll', checkScroll);
   }, [isHomePage]);
 
+  // Particle Engine initialization
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    // Create more particles on larger screens
+    const particleCount = width > 1024 ? 120 : 60;
+    particlesRef.current = createParticles(width, height, particleCount);
+
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
+      updateParticles(particlesRef.current, width, height);
+      renderParticles(ctx, particlesRef.current);
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    const handleResize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, []);
+
   return (
-    <div className={`min-h-screen flex flex-col bg-paper-white text-deep-navy font-sans antialiased selection:bg-saffron/20 selection:text-deep-navy ${className}`}>
+    <div className={`min-h-screen flex flex-col bg-paper-white text-deep-navy font-sans antialiased selection:bg-saffron/20 selection:text-deep-navy relative ${className}`}>
+      
+      {/* Base Canvas for Saffron Particles */}
+      <canvas 
+        ref={canvasRef} 
+        className="fixed inset-0 w-full h-full pointer-events-none z-0" 
+        aria-hidden="true" 
+      />
+
+      {/* Frosted Glass Blur Overlay */}
+      <div className="fixed inset-0 backdrop-blur-[60px] bg-paper-white/50 pointer-events-none z-0"></div>
+
+      {/* Saffron Cursor Trailing Effect */}
+      <CursorTrail />
+
       {/* Skip to main content for accessibility */}
       <a
         href="#main-content"
@@ -61,19 +120,19 @@ export const AppShell: React.FC<AppShellProps> = ({
       <div
         className={
           isHomePage
-            ? `fixed top-0 left-0 right-0 z-40 transition-all duration-300 transform ${
+            ? `fixed top-0 left-0 right-0 z-50 transition-all duration-300 transform ${
                 headerVisible
-                  ? 'translate-y-0 opacity-100 shadow-md'
+                  ? 'translate-y-0 opacity-100'
                   : '-translate-y-full opacity-0 pointer-events-none'
               }`
-            : 'sticky top-0 z-40'
+            : 'sticky top-0 z-50 relative'
         }
       >
         {/* Optional Top Emergency Banner */}
         {showEmergencyBanner && (
           <aside
             aria-label={t.emergency.ariaLabel}
-            className="border-b border-alert-red/20 bg-red-50/90 text-deep-navy px-3.5 py-1.5 text-xs text-center sm:text-left shadow-2xs"
+            className="border-b border-alert-red/20 bg-red-50/90 text-deep-navy px-3.5 py-1.5 text-xs text-center sm:text-left shadow-2xs relative z-10"
           >
             <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-1 sm:gap-4 px-2">
               <div className="flex items-center gap-2">
@@ -96,22 +155,29 @@ export const AppShell: React.FC<AppShellProps> = ({
         )}
 
         {/* Shared Header */}
-        <Header />
+        <Header topOffset={showEmergencyBanner ? 'top-10 sm:top-12' : 'top-4'} />
       </div>
 
       {/* Main Content Slot */}
       <main
         id="main-content"
         tabIndex={-1}
-        className={`flex-1 w-full ${
-          isHomePage ? 'w-full max-w-none p-0 m-0 focus:outline-none' : 'max-w-7xl mx-auto px-4 py-8 sm:px-6 sm:py-10 focus:outline-none'
+        className={`flex-1 w-full relative z-10 flex flex-col ${
+          isHomePage
+            ? 'w-full max-w-none p-0 m-0 focus:outline-none'
+            : isChatPage
+            ? 'w-full max-w-none p-0 m-0 focus:outline-none'
+            : 'max-w-7xl mx-auto px-4 py-8 sm:px-6 sm:py-10 focus:outline-none'
         } ${mainClassName}`}
       >
         {children}
       </main>
 
-      {/* Shared Footer */}
-      <Footer />
+      {!isChatPage && (
+        <div className="relative z-10">
+          <Footer />
+        </div>
+      )}
     </div>
   );
 };

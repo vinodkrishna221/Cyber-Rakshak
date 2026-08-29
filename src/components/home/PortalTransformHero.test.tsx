@@ -81,7 +81,7 @@ describe('PortalTransformHero Component', () => {
     expect(resolvedView).toHaveAttribute('inert');
   });
 
-  it('cleans up scroll and resize listeners cleanly on unmount', () => {
+  it('cleans up scroll listeners cleanly on unmount', () => {
     const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener');
 
     const { unmount } = render(
@@ -92,7 +92,6 @@ describe('PortalTransformHero Component', () => {
 
     unmount();
 
-    expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function));
     expect(removeEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
   });
 

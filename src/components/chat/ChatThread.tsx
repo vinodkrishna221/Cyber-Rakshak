@@ -8,7 +8,6 @@ import {
 import { ChatMessageItem } from './ChatMessageItem';
 import { CategoryConfidenceCard } from './CategoryConfidenceCard';
 import { EmergencyActionCard } from './EmergencyActionCard';
-import { EvidenceUploader } from './EvidenceUploader';
 import { ChakraMark } from '../ui/ChakraMark';
 import { useTranslation } from '../../i18n';
 
@@ -17,14 +16,12 @@ interface ChatThreadProps {
   classification: ClassificationResult | null;
   categoryConfirmed: boolean;
   isTyping?: boolean;
-  showEvidenceUploader?: boolean;
   category?: ComplaintCategory;
   onConfirmCategory: () => void;
   onChangeCategory: (
     newCategory: ComplaintCategory,
     newSubCategoryKey?: ComplaintSubCategory,
   ) => void;
-  onCloseEvidence?: () => void;
 }
 
 export const ChatThread: React.FC<ChatThreadProps> = ({
@@ -32,11 +29,9 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
   classification,
   categoryConfirmed,
   isTyping = false,
-  showEvidenceUploader = false,
-  category,
+  category: _category,
   onConfirmCategory,
   onChangeCategory,
-  onCloseEvidence,
 }) => {
   const { t } = useTranslation();
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -49,7 +44,7 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
     ) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, classification, isTyping, showEvidenceUploader]);
+  }, [messages, classification, isTyping]);
 
   return (
     <div
@@ -83,15 +78,7 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
         </div>
       )}
 
-      {/* Inline Evidence Uploader when triggered or upon questions completion */}
-      {showEvidenceUploader && (
-        <div className="pl-0 sm:pl-10 my-3 animate-fade-in" data-testid="chat-evidence-section">
-          <EvidenceUploader
-            category={category || classification?.category}
-            onClose={onCloseEvidence}
-          />
-        </div>
-      )}
+
 
       {/* Simulated Typing Indicator */}
       {isTyping && (
@@ -103,10 +90,10 @@ export const ChatThread: React.FC<ChatThreadProps> = ({
           <div className="shrink-0">
             <ChakraMark size="sm" aria-hidden="true" />
           </div>
-          <div className="bg-white border border-border-soft px-4 py-2.5 rounded-2xl shadow-2xs flex items-center gap-1.5">
-            <span className="size-1.5 rounded-full bg-chakra-blue animate-bounce [animation-delay:-0.3s]" />
-            <span className="size-1.5 rounded-full bg-chakra-blue animate-bounce [animation-delay:-0.15s]" />
-            <span className="size-1.5 rounded-full bg-chakra-blue animate-bounce" />
+          <div className="bg-white/70 backdrop-blur-sm border border-black/5 px-4 py-2.5 rounded-2xl shadow-sm flex items-center gap-1.5">
+            <span className="size-1.5 rounded-full bg-saffron animate-bounce [animation-delay:-0.3s]" />
+            <span className="size-1.5 rounded-full bg-saffron animate-bounce [animation-delay:-0.15s]" />
+            <span className="size-1.5 rounded-full bg-saffron animate-bounce" />
             <span className="text-xs text-muted-text font-medium ml-1">
               {t.chat.typingIndicator}
             </span>

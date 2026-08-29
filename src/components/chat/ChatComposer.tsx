@@ -97,7 +97,7 @@ export const ChatComposer: React.FC<ChatComposerProps> = ({
                   type="button"
                   onClick={() => handleOptionClick(opt)}
                   disabled={disabled}
-                  className="inline-flex items-center text-xs font-semibold px-3 py-1.5 rounded-pill bg-blue-50 hover:bg-blue-100/80 text-chakra-blue border border-chakra-blue/20 hover:border-chakra-blue/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-2xs text-left"
+                  className="inline-flex items-center text-xs font-bold px-4 py-2 rounded-full bg-saffron/10 hover:bg-saffron text-saffron hover:text-white border border-saffron/20 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm text-left"
                 >
                   {chipLabel}
                 </button>
@@ -121,7 +121,7 @@ export const ChatComposer: React.FC<ChatComposerProps> = ({
                 type="button"
                 onClick={() => handleStarterChipClick(chip.text)}
                 disabled={disabled}
-                className="inline-flex items-center text-xs font-medium px-3 py-1.5 rounded-pill bg-mist hover:bg-blue-50 text-deep-navy hover:text-chakra-blue border border-border-soft hover:border-chakra-blue/40 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-2xs text-left"
+                className="inline-flex items-center text-xs font-bold px-4 py-2 rounded-full bg-saffron/10 hover:bg-saffron text-saffron hover:text-white border border-saffron/20 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm text-left"
               >
                 {chip.text}
               </button>
@@ -133,7 +133,7 @@ export const ChatComposer: React.FC<ChatComposerProps> = ({
       {/* Main Composer Box */}
       <form
         onSubmit={handleSubmit}
-        className="relative flex items-end gap-2 bg-mist/70 rounded-2xl border border-border-soft p-2 sm:p-2.5 focus-within:border-chakra-blue focus-within:bg-white focus-within:ring-2 focus-within:ring-chakra-blue/20 transition-all shadow-2xs"
+        className="relative flex items-end gap-2 bg-white rounded-2xl border border-black/5 p-2 sm:p-2.5 focus-within:border-saffron/40 focus-within:ring-2 focus-within:ring-saffron/40 transition-all shadow-lg"
       >
         {/* Hidden File Input */}
         <input
@@ -166,7 +166,7 @@ export const ChatComposer: React.FC<ChatComposerProps> = ({
           disabled={disabled}
           title={t.chat.attachEvidenceAria}
           aria-label={t.chat.attachEvidenceAria}
-          className="inline-flex items-center justify-center size-9 sm:size-10 rounded-xl text-muted-text hover:text-chakra-blue hover:bg-blue-50 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shrink-0 focus-visible:ring-2 focus-visible:ring-chakra-blue"
+          className="inline-flex items-center justify-center size-9 sm:size-10 rounded-full text-muted-text hover:text-saffron hover:bg-saffron/10 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shrink-0 focus-visible:ring-2 focus-visible:ring-saffron"
         >
           <Paperclip className="size-4.5 sm:size-5" aria-hidden="true" />
         </button>
@@ -188,7 +188,7 @@ export const ChatComposer: React.FC<ChatComposerProps> = ({
           type="submit"
           disabled={disabled || !text.trim()}
           aria-label={t.chat.sendButtonAria}
-          className="inline-flex items-center justify-center size-9 sm:size-10 rounded-xl bg-saffron hover:bg-[#E67E17] text-deep-navy font-bold shadow-2xs transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-saffron"
+          className="inline-flex items-center justify-center size-9 sm:size-10 rounded-full bg-saffron hover:bg-[#E67E17] text-white font-bold shadow-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-saffron"
         >
           <Send className="size-4.5 sm:size-5" aria-hidden="true" />
         </button>
